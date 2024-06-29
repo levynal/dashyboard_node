@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../node_modules/gridstack/dist/gridstack-all.js"></script>
+    <link href="../node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/vanjs-org/van/public/van-1.5.0.nomodule.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vanjs-ui@0.10.0/dist/van-ui.nomodule.min.js"></script>
+
+<style type="text/css">
+  .grid-stack { background: #FAFAD2; }
+  .grid-stack-item-content { background-color: #18BC9C; }
+</style>
+
+</head>
+<body>
+
+
+
+
+    <script type="text/javascript">
+
+
+const {a, div, li, p, ul,button,h2,span} = van.tags
+
+
+const Example1 = () => {
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+  const fetchWithDelay = (url, waitMs) =>
+    sleep(waitMs).then(() => fetch(url)).then(r => r.json())
+
+  const fetchStar = () =>
+    fetchWithDelay("https://api.github.com/repos/vanjs-org/van", 1000)
+      .then(data => data.stargazers_count)
+
+  const data = van.state(fetchStar())
+
+  return [
+    () => h2(
+      "Github Star: ",
+      Await({
+        value: data.val, container: span,
+        Loading: () => "🌀 Loading...",
+        Error: () => "🙀 Request failed.",
+      }, starNumber => `⭐️ ${starNumber}!`)
+    ),
+    () => Await({
+      value: data.val,
+      Loading: () => '',
+    }, () => button({onclick: () => (data.val = fetchStar())}, "Refetch")),
+  ]
+}
+const Item = (data, x=1)=> {
+
+const dataState = van.state(data)
+  return div({class:"grid-stack-item", "gs-w":x},
+                        div({class:"grid-stack-item-content"},
+                            p(dataState.val.title)
+                        )
+                    )
+
+}
+  var grid = null
+
+const Stack = (grid)=> div({class:"grid-stack"},
+                    )
+
+
+const getModules = ()=> fetch("/api/widget")
+                            .then((resp)=>resp.json())
+
+
+const onMount = (func)=>{
+  const trigger = van.state(false)
+    van.derive(() => {
+      if(trigger.val){
+func()
+      }
+    })
+    trigger.val = true
+}
+
+    const modules = van.state()
+
+// Créer une connexion WebSocket
+const socket = new WebSocket(`ws://${location.host}/ws`);
+
+// La connexion est ouverte
+socket.addEventListener("open", function (event) {
+  socket.send("Coucou le serveur !");
+});
+
+// Écouter les messages
+socket.addEventListener("message", function (event) {
+  const moduleData = JSON.parse(event.data)
+  console.log(moduleData)
+  if(moduleData.name === "NEW_WIDGET"){
+      console.log('pushed')
+grid.addWidget(Item(moduleData.data))
+  }
+  console.log("Voici un message du serveur", event.data);
+});
+   van.derive(() => {
+          if(modules.val){
+            console.log(modules.val)
+  modules?.val?.forEach(element => {
+        grid.addWidget(Item(element))
+      });
+          }
+    })
+const App =  () => {
+    
+
+  onMount(async ()=>{
+    console.log('mounted')
+modules.val = await getModules()
+    console.log('mounted', modules.val)
+
+  })
+
+
+ 
+        const name = van.state("item1")
+//     setTimeout(()=>{
+// grid.addWidget(Item(name),)
+
+// console.log({modules})
+//     }, 5000)
+//     setTimeout(()=>grid.removeWidget(Item('item2')), 5000)
+
+    // return  [
+    //     Item('item1'),
+    //     Item('item 2', 4)
+    // ]
+  return Stack
+}
+
+// App()
+//   var items = [
+//     {content: 'my first widget'}, // will default to location (0,0) and 1x1
+//     {w: 2, content: 'another longer widget!'} // will be placed next at (1,0) and 2x1
+//   ];
+  
+    //   grid.load(items);
+
+
+
+//   })
+
+
+ van.add(document.body, App())
+ grid = GridStack.init();
+console.log(grid)
+
+
+</script>
+
+</body>
+</html>

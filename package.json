@@ -1,0 +1,30 @@
+{
+  "name": "dashyboard_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node ./dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/static": "^7.0.4",
+    "@fastify/vite": "^6.0.6",
+    "@fastify/vue": "^0.5.0",
+    "@fastify/websocket": "^10.0.1",
+    "@inquirer/prompts": "^5.0.7",
+    "clear-module": "^4.1.2",
+    "fastify": "^4.28.0",
+    "gridstack": "^10.3.0",
+    "node-json-db": "^2.3.0",
+    "typescript": "^5.5.2",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.5.10"
+  }
+}
