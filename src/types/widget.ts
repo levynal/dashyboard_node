@@ -1,8 +1,10 @@
 import { Widget } from "../models/Widget";
 
-export type WidgetPosition = {
+export type WidgetPositionSize = {
   x: number;
   y: number;
+  w: number;
+  h: number;
 };
 
 export interface WidgetConfiguration<D extends { [k: string]: unknown }> {

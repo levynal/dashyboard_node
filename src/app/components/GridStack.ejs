@@ -1,0 +1,11 @@
+<div class="grid-stack">
+
+    <% widgets.forEach(function(widget) { %>
+         <%- include('../components/Widget', {widget}); %>
+    <% }); %> 
+
+</div>
+
+<script>
+    console.log('from gridstack')
+</script>

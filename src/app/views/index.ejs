@@ -1,0 +1,43 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <script src="../node_modules/gridstack/dist/gridstack-all.js"></script>
+        <link href="../node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/vanjs-org/van/public/van-1.5.0.nomodule.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vanjs-ui@0.10.0/dist/van-ui.nomodule.min.js"></script>
+
+        <style type="text/css">
+            .grid-stack { background: #FAFAD2; }
+            .grid-stack-item-content { background-color: #18BC9C; }
+        </style>
+        <%- include('../scripts/websocket'); %>
+        <%- include('../scripts/global'); %>
+
+        <%- include('../scripts/widgets'); %>
+        <script>console.log('je suis head')</script>
+    </head>
+    <body>
+               <script>console.log('je suis body')</script>
+
+        <%-  include('../components/GridStack', {widgets:widgets}); %>
+        <script type="text/javascript">
+            const  grid = GridStack.init({columns:'auto'});
+
+            grid.on('change', function (event, els) {
+                const widgetsChangedData = els?.map(
+                (el)=>{
+                    const {x,y, w, h} = el
+                    return {x, y, w, h, id:el.el.dashyboard.data.id}
+                }) 
+                if(widgetsChangedData)
+                    WidgetService.updateWidgetsPositionAndSize(widgetsChangedData)
+            });
+        </script>
+    </body>
+</html>

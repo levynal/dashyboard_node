@@ -1,5 +1,8 @@
 import { FastifyInstance } from "fastify";
-import { WidgetController } from "../controllers/WidgetController";
+import { WidgetController } from "../../controllers/WidgetController";
+import { WidgetPositionSize } from "../../types/widget";
+
+export type UpdatePositionSizeBody = WidgetPositionSize & { id: string };
 
 export default function (
   fastify: FastifyInstance,
@@ -25,6 +28,11 @@ export default function (
         },
       },
       async (d) => WidgetController.addWidget(d.body.name)
+    )
+    .post<{
+      Body: UpdatePositionSizeBody[];
+    }>("/updatePositionAndSize", (req) =>
+      WidgetController.updatePositionAndSize(req.body)
     );
 
   done();

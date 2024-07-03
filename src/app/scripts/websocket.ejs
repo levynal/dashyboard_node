@@ -1,0 +1,75 @@
+<script>
+
+    
+     window.addEventListener("DOMContentLoaded",()=>{
+  // La connexion est ouverte
+    window.WebSocketService = new MyCustomSocket()
+
+console.log('alors', window.WebSocketService)
+            })
+    
+
+    class MyCustomSocket {
+
+        #listenedEvents
+        #socket
+        isReady
+        queue
+        constructor(){
+            this.#listenedEvents = {}
+            this.queue = []
+            this.#socket = new WebSocket(`ws://${location.host}/ws`);
+            this.isReady = false
+            this.listen()
+            this.#socket.addEventListener("open",  (event) =>{
+                // socket.send("Coucou le serveur !");
+                this.queue.forEach((callback)=>{
+                    callback(this)
+                })
+            });
+        }
+        on(event, callback, conditionFn){
+            this.#listenedEvents[event] = {
+                callback,
+                conditionFn:conditionFn
+            }
+        }
+
+        off(event){
+            delete this.#listenedEvents[event]
+        }
+
+        onMessage(event){
+            const eventData = JSON.parse(event.data)
+            const listener = this.#listenedEvents[eventData.name]
+            if(listener){
+                if(listener.conditionFn){
+                    if(!listener.conditionFn(data)){
+                        return;
+                    }
+                }
+                listener.callback(eventData.data)
+            }
+            console.log("Voici un message du serveur", event.data);
+        }
+
+        listen(){
+            
+             this.#socket.addEventListener("message", this.onMessage);
+        }
+
+        stop(){
+            this.#socket.removeEventListener("message", this.onMessage)
+        }
+
+        waitSocket(callback){
+            if(this.isReady){
+                callback(this)
+            }else{
+                this.queue.push(callback)
+            }
+        }
+
+    }
+
+</script>

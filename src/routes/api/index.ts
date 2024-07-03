@@ -1,14 +1,12 @@
 import { FastifyInstance } from "fastify";
-import api from "./api";
-import app from "./app";
+import widgets from "./widgets";
 
 export default function (
   fastify: FastifyInstance,
   opts: {},
   done: (err?: Error) => void
 ) {
-  fastify.register(api, { prefix: "api" });
-  fastify.register(app, { prefix: "/" });
+  fastify.register(widgets, { prefix: "widget" });
 
   done();
 }

@@ -3,28 +3,46 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
+   "watch": {
+    "start":{
+      "patterns": ["src"],
+      "extensions": "ts,ejs",
+      "quiet": true,
+      "legacyWatch": true,
+      "delay": 2500,
+      "runOnChangeOnly": false
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node ./dist/index.js"
+    "start": "npm run postbuild && tsc && node ./dist/index.js",
+    "postbuild": "copyfiles -u 1 src/**/* dist -e 'src/**/*.ts'",
+    "postbuild2": "cpy 'src/**/*' '!src/**/*.ts' '../dist2/'",
+    "watch": "npm-watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@fastify/static": "^7.0.4",
+    "@fastify/view": "^9.1.0",
     "@fastify/vite": "^6.0.6",
     "@fastify/vue": "^0.5.0",
     "@fastify/websocket": "^10.0.1",
     "@inquirer/prompts": "^5.0.7",
     "clear-module": "^4.1.2",
+    "ejs": "^3.1.10",
     "fastify": "^4.28.0",
     "gridstack": "^10.3.0",
     "node-json-db": "^2.3.0",
+    "npm-watch": "^0.13.0",
     "typescript": "^5.5.2",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/uuid": "^10.0.0",
-    "@types/ws": "^8.5.10"
+    "@types/ws": "^8.5.10",
+    "copyfiles": "^2.4.1",
+    "cpy-cli": "^5.0.0"
   }
 }

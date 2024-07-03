@@ -1,4 +1,4 @@
-import { WidgetConfiguration, WidgetPosition } from "../types/widget";
+import { WidgetConfiguration, WidgetPositionSize } from "../types/widget";
 import { AppManager } from "../core/AppManager";
 import { SocketManager } from "../core/SocketManager";
 import UpdateWidgetDataEvent from "../events/UpdateWidgetDataEvent";
@@ -14,7 +14,7 @@ export class Widget<
   D extends { [k: string]: unknown } = { [k: string]: unknown }
 > {
   #title: string;
-  #position: WidgetPosition = { x: 0, y: 0 };
+  #position: WidgetPositionSize = { x: 0, y: 0, w: 1, h: 1 };
   data: WidgetConfiguration<D>["data"];
   #_emitData: boolean = true;
   constructor(
@@ -44,7 +44,7 @@ export class Widget<
   loadFromDb(data: {
     id: string;
     title: string;
-    position: WidgetPosition;
+    position: WidgetPositionSize;
     widgetName: string;
   }) {
     this.#position = data.position;
@@ -74,15 +74,15 @@ export class Widget<
     this.data = this.#getDataProxy(data);
   }
 
+  setPositionSize(positionSize: WidgetPositionSize) {
+    this.#position = positionSize;
+  }
   toJSON() {
     return {
       id: this.id,
       title: this.#title,
       widgetName: this.widgetConfiguration.name,
-      position: {
-        x: 0,
-        y: 0,
-      },
+      position: this.#position,
     };
   }
 }

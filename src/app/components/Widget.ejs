@@ -1,0 +1,48 @@
+<div 
+    class="grid-stack-item" 
+    gs-x="<%- widget.position.x %>" 
+    gs-y="<%- widget.position.y %>"
+    gs-w="<%- widget.position.w %>" 
+    gs-h="<%- widget.position.h %>"
+    data-data="<%- encodeURIComponent(JSON.stringify(widget)) %>"
+>
+    <div class="grid-stack-item-content">
+        <p r-text="widget.title"><%= widget.title %></p>
+        <p r-text="input.value"></p>
+        <input type="text" r-model="input.value" ></input>
+
+        <form r-submit="toto">
+             <input type="text" r-model="input.value"></input>
+             <button type="submit">Send</button>
+        </form>
+        <button r-click="toto,<%= widget.id %>">call toto</button>
+    </div>
+
+    <script>
+        //Current script to get main element instance
+        //callback with first arg is ssr data
+        //second is context with func to manage hooks and states 
+        new composant(document.currentScript, (ssrData, {ref, onMount, updateValue, addHTMLAction})=>{
+
+
+            const widget = ref('widget', ssrData)
+            const input = ref("input",{value:''})
+
+
+            addHTMLAction('toto', (data)=>{
+                console.log({data, input})
+                console.log({event})
+            })
+
+            onMount((context)=>{
+                context.socket.on('WIDGET_UPDATE_DATA', (data)=>{
+l
+
+                },(data)=>data.id === this.widget.id)
+            })
+
+        })
+        
+    </script>
+</div>
+

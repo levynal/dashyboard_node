@@ -1,4 +1,6 @@
 "use strict";
+// import { widgetConfiguration } from "../dist/action/widget";
+// import { widgetConfiguration } from "../src/action/widget";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,8 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.draftboard = draftboard;
-var widget_1 = require("../dist/action/widget");
-// import { widgetConfiguration } from "../src/action/widget";
+var Widget_1 = require("../dist/models/Widget");
 function test() {
     return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/];
@@ -47,7 +48,7 @@ function test() {
 function draftboard() {
     return {
         widgets: [
-            (0, widget_1.widgetConfiguration)({
+            (0, Widget_1.widgetConfiguration)({
                 id: "",
                 name: "widtget 1",
                 data: {

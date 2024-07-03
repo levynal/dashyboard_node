@@ -2,7 +2,7 @@ import { Widget, widgetConfiguration } from "../models/Widget";
 import { AppManager } from "./AppManager";
 import { v4 as uuidv4 } from "uuid";
 import { JsonDB, Config } from "node-json-db";
-import { WidgetPosition } from "../types/widget";
+import { WidgetPositionSize } from "../types/widget";
 import { SocketManager } from "./SocketManager";
 import NewWidgetEvent from "../events/NewWidgetEvent";
 
@@ -44,7 +44,7 @@ export namespace WidgetManager {
     ) as {
       id: string;
       title: string;
-      position: WidgetPosition;
+      position: WidgetPositionSize;
       widgetName: string;
     }[];
 
@@ -68,5 +68,13 @@ export namespace WidgetManager {
 
   export function saveWidgets(widget: Widget) {
     return widgetDB.push(`/widgets/${widget.id}`, widget.toJSON());
+  }
+
+  export async function updateWidgetPosition(
+    id: string,
+    widgetPositionSize: WidgetPositionSize
+  ) {
+    widgets[id].setPositionSize(widgetPositionSize);
+    await saveWidgets(widgets[id]);
   }
 }
