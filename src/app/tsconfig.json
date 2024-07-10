@@ -1,0 +1,35 @@
+{
+   "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    //  "paths": {
+    //   "~shared/*": ["../shared/*"]
+    // },
+    // "rootDirs": [
+    //   "./src",
+    //   "../shared"
+    // ],
+
+    "target": "es2022",
+    "module": "es2022",
+    "moduleResolution": "node",
+   "outDir": "../../dist/app",
+    "rootDir": "./",
+    "strict": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "composite": true,
+    
+  },
+   "include": [
+    "src",
+    "lib"
+  ],
+   "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  }
+}

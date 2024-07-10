@@ -1,6 +1,5 @@
 import Fastify from "fastify";
 import routes from "./routes";
-import fastifyStatic from "@fastify/static";
 import fastifyWebsocket from "@fastify/websocket";
 import path from "node:path";
 import AppFactory from "./factories/AppFactory";
@@ -25,7 +24,7 @@ fastify.register(async function (fastify) {
 console.log(path.join(__dirname, "app"));
 
 fastify.register(fastifyView, {
-  root: path.join(__dirname, "app"),
+  root: path.join(__dirname, "..", "app", "src"),
   engine: {
     ejs: require("ejs"),
   },
@@ -36,11 +35,6 @@ fastify.register(fastifyView, {
 //   prefix: "/",
 // });
 
-fastify.register(fastifyStatic, {
-  root: path.join(__dirname, "..", "node_modules"),
-  prefix: "/node_modules/",
-  decorateReply: false, // the reply decorator has been added by the first plugin registration
-});
 fastify.register(routes);
 
 // Run the server!

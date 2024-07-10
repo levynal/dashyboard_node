@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "type": "commonjs",
-   "watch": {
-    "start":{
-      "patterns": ["src"],
+  "watch": {
+    "start": {
+      "patterns": [
+        "src"
+      ],
       "extensions": "ts,ejs",
       "quiet": true,
       "legacyWatch": true,
@@ -16,9 +18,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run postbuild && tsc && node ./dist/index.js",
-    "postbuild": "copyfiles -u 1 src/**/* dist -e 'src/**/*.ts'",
-    "postbuild2": "cpy 'src/**/*' '!src/**/*.ts' '../dist2/'",
+    "build": "tsc --build tsconfig.json && fix-esm-import-path dist/app",
+    "start": "node ./dist/server/index.js",
+    "postbuild": "copyfiles -u 2 src/app/src/**/* dist/app -e 'src/app/src/**/*.ts' ",
+    "postbuild2": "copyfiles -u 3 src/app/src/**/* dist/app -e 'src/app/src/**/*.ts'",
     "watch": "npm-watch"
   },
   "author": "",
@@ -43,6 +46,8 @@
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.5.10",
     "copyfiles": "^2.4.1",
-    "cpy-cli": "^5.0.0"
+    "cpy-cli": "^5.0.0",
+    "fix-esm-import-path": "^1.10.0",
+    "tsc-alias": "1.8.10"
   }
 }

@@ -25,7 +25,7 @@ export namespace ModuleManager {
   }
   async function importModules() {
     let modules: Module[] = [];
-    const basePath = path.join(__dirname, "../..", ".modules");
+    const basePath = path.join(__dirname, "../../..", ".modules");
     const moduleFiles = (await fs.readdir(basePath, { withFileTypes: true }))
       .filter((f) => f.isFile())
       .map((f) => f.name);
@@ -68,7 +68,7 @@ export namespace ModuleManager {
     const jsContent = ts.transpileModule(source, options).outputText;
     const newPath = path.join(
       __dirname,
-      "../..",
+      "../../..",
       ".modules_compiled",
       `${name}}.js`
     );

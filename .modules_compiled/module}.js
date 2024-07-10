@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.draftboard = draftboard;
-var Widget_1 = require("../dist/models/Widget");
+var Widget_1 = require("../dist/server/models/Widget");
 function test() {
     return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/];

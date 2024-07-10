@@ -1,0 +1,29 @@
+<div 
+    class="grid-stack-item" 
+    gs-x="<%- widget.position.x %>" 
+    gs-y="<%- widget.position.y %>"
+    gs-w="<%- widget.position.w %>" 
+    gs-h="<%- widget.position.h %>"
+    data-data="<%- encodeURIComponent(JSON.stringify(widget)) %>"
+    id="<%= widget.id %>"
+>
+    <div class="grid-stack-item-content">
+        <p r-text="widget.value.id"><%= widget.id %></p>
+        <p r-text="new Date() + widget.value.title"><%= widget.title %></p>
+         <p r-text="widget.value"></p>
+         <p r-text="computedVar.value"></p>
+        <p r-text="'value: [' + input.value + ']'"></p>
+        <p r-text="maVar" r-ref="maRef"></p>
+        <input type="text" r-model="widget.value.title" ></input>
+
+        <form r-submit="toto">
+             <input type="text" r-model-number="input.value"></input>
+             <button type="submit">Send</button>
+        </form>
+        <button r-click="toto2('<%= widget.id %>')">call toto</button>
+    </div>
+    <script>
+        window.R.add('Widget', '<%= widget.id %>')
+    </script>
+</div>
+
