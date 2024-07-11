@@ -1,4 +1,5 @@
 import Component, { ComponentInstance, SetupFunction } from "./Component";
+import Attribute, { Modifiers } from "./core/Attributes/Attribute";
 
 declare global {
   interface Window {
@@ -35,6 +36,18 @@ export class App {
   #COMPONENTS: Map<string, SetupFunction<unknown>> = new Map();
   #COMPONENTS_INSTANCE: ComponentInstance[] = [];
   #INJECTIONS: { [k in InjectionKeys]?: GlobalInjection[k] } = {}; //new Map<InjectionKeys, InjectionValues>();
+
+  #EXTRA_ATTRIBUTES: Attribute[] = [];
+
+  #EXTRA_MODFIERS: { [k: string]: Modifiers } = {
+    model: {
+      number: (value) => {
+        const numbered = Number(value);
+        return isNaN(numbered) ? value : numbered;
+      },
+    },
+  };
+
   mount() {
     window.Dashyboard.__components_queue.forEach((component) => {
       const setup = this.#COMPONENTS.get(component.__component);
@@ -73,6 +86,30 @@ export class App {
 
   get INJECTIONS() {
     return this.#INJECTIONS;
+  }
+
+  get ATTRIBUTES() {
+    return this.#EXTRA_ATTRIBUTES;
+  }
+
+  get MODFIERS() {
+    return this.#EXTRA_MODFIERS;
+  }
+
+  addModifier(
+    attributeName: string,
+    modifierName: string,
+    modifierAction: Modifiers[string]
+  ) {
+    if (!(attributeName in this.#EXTRA_MODFIERS)) {
+      this.#EXTRA_MODFIERS[attributeName] = {};
+    }
+
+    this.#EXTRA_MODFIERS[attributeName][modifierName] = modifierAction;
+  }
+
+  addAttribute(attribute: Attribute) {
+    this.#EXTRA_ATTRIBUTES.push(attribute);
   }
 
   provide<N extends InjectionKeys>(name: N, value: GlobalInjection[N]) {

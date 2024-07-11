@@ -1,14 +1,6 @@
-import {
-  Computed,
-  Ref,
-  RegisterAttributesBinding,
-  RegisterEvents,
-  RegisterModels,
-  Watch,
-} from "./utils/index";
-import MyCustomSocket from "../src/modules/websocket/WebSocket";
+import { Computed, Ref, Watch } from "./core/Reactivity";
 import { App, InjectionKeys, MyEvent } from ".";
-import ElementRefRegister from "./utils/ElementRefRegister";
+import RegisterAttributes from "./core/Attributes/RegisterAttributes";
 
 type OnAppEventCallBack<E extends MyEvent = MyEvent> = (e: E) => void;
 export type SetupFunction<SsrData> = (this: ComponentInstance<SsrData>) => {
@@ -66,14 +58,10 @@ export class ComponentInstance<SsrData = unknown> {
       false
     );
     this.__setupData = setup.call(this);
-    RegisterModels.apply(this);
-    RegisterEvents.apply(this);
-    RegisterAttributesBinding.apply(this);
-    ElementRefRegister.apply(this);
-    // this.context.ws.waitSocket(() => {
-    //   this._mounted = true;
-    //   this.onMountsFn.forEach((callback) => callback());
-    // });
+
+    const appAttributes = RegisterAttributes.call(this);
+
+    appAttributes.forEach((attribute) => attribute.init(this));
   }
 
   ref<V>(stateValue: V) {
@@ -93,17 +81,11 @@ export class ComponentInstance<SsrData = unknown> {
     this.onAppEventFn.push(callback);
   }
 
-  toto() {
+  get __app__() {
     return this.__app;
   }
 
   inject<T extends InjectionKeys>(name: T) {
     return this.__app.INJECTIONS[name];
   }
-
-  // get context() {
-  //   return {
-  //     ws: MyCustomSocket.getInstance(),
-  //   };
-  // }
 }

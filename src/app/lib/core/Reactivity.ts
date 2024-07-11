@@ -1,5 +1,5 @@
 import { ComponentInstance } from "../Component";
-import { debounce } from "./debounce";
+import { debounce } from "../utils/debounce";
 
 export function Computed<T>(
   this: ComponentInstance,
