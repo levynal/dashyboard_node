@@ -83,6 +83,7 @@ export class Widget<
       title: this.#title,
       widgetName: this.widgetConfiguration.name,
       position: this.#position,
+      actions: Object.keys(this.widgetConfiguration.actions),
     };
   }
 }

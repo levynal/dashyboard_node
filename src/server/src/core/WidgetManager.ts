@@ -77,4 +77,12 @@ export namespace WidgetManager {
     widgets[id].setPositionSize(widgetPositionSize);
     await saveWidgets(widgets[id]);
   }
+
+  export async function updateWidget(
+    id: string,
+    widgetData: { title: string }
+  ) {
+    widgets[id].title = widgetData.title;
+    await saveWidgets(widgets[id]);
+  }
 }

@@ -30,11 +30,9 @@ export default function RegisterAttributes(this: ComponentInstance) {
 
     new EventAttribute("click", "click"),
     new EventAttribute("input", "input"),
-    new EventAttribute(
-      "submit",
-      "submit",
-      (event, modifier) => modifier === "prevent" && event.preventDefault()
-    ),
+    new EventAttribute("submit", "submit", {
+      prevent: (e: Event) => e.preventDefault(),
+    }),
     ...this.__app__.ATTRIBUTES,
   ] as Attribute[];
 }

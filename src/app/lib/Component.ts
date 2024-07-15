@@ -3,20 +3,30 @@ import { App, InjectionKeys, MyEvent } from ".";
 import RegisterAttributes from "./core/Attributes/RegisterAttributes";
 
 type OnAppEventCallBack<E extends MyEvent = MyEvent> = (e: E) => void;
-export type SetupFunction<SsrData> = (this: ComponentInstance<SsrData>) => {
-  [k: string]: unknown;
-};
-export default function Component<SsrData = unknown>(
-  setup: SetupFunction<SsrData>
+
+export interface ISetupData {
+  [k: string | symbol]: unknown;
+}
+export type SetupFunction<SsrData = unknown, SetupData = ISetupData> = (
+  this: ComponentInstance<SsrData>
+) => SetupData;
+
+export default function Component<SsrData, SetupData>(
+  setup: SetupFunction<SsrData, SetupData>
 ) {
   return setup;
 }
 
-export class ComponentInstance<SsrData = unknown> {
+export class ComponentInstance<
+  SsrData = unknown,
+  SetupData extends ISetupData = ISetupData
+> {
   private _mounted: boolean = false;
-  public componentEl: HTMLElement & { dashyboard: { data: SsrData } };
+  public componentEl: HTMLElement & {
+    _relement: ComponentInstance<SsrData, SetupData>;
+  };
   private __app: App;
-  public __setupData: { [k: string | symbol]: unknown } = {};
+  public __setupData: SetupData = {} as SetupData;
   public data: SsrData;
 
   public watchers: {
@@ -31,13 +41,13 @@ export class ComponentInstance<SsrData = unknown> {
 
   public computed = Computed.bind(this);
   constructor(
-    el: HTMLElement,
-    setup: (this: ComponentInstance<SsrData>) => { [k: string]: unknown },
+    el: Element,
+    setup: (this: ComponentInstance<SsrData, SetupData>) => SetupData,
     app: App
   ) {
     this.__app = app;
     const _el = el as HTMLElement & {
-      dashyboard: { data: SsrData };
+      _relement: ComponentInstance<SsrData, SetupData>;
     };
     this.componentEl = _el;
 
@@ -45,9 +55,7 @@ export class ComponentInstance<SsrData = unknown> {
       decodeURIComponent(this.componentEl.dataset["data"]!)
     ) as SsrData;
 
-    this.componentEl.dashyboard = {
-      data: this.data,
-    };
+    this.componentEl._relement = this;
     this.componentEl.addEventListener(
       "app-event",
       (e) => {

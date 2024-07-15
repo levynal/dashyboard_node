@@ -6,12 +6,12 @@ declare global {
     Dashyboard: {
       __app?: App;
       __components_queue: {
-        id: string;
+        el: string | Element;
         __component: string;
       }[];
     };
     R: {
-      add: (__component: string, id: string) => void;
+      add: (__component: string, id: string | Element) => void;
     };
   }
   export interface GlobalInjection {
@@ -48,25 +48,30 @@ export class App {
     },
   };
 
+  initComponent(__component: string, el: string | Element) {
+    const setup = this.#COMPONENTS.get(__component);
+    if (setup) {
+      const i = this.#COMPONENTS_INSTANCE.push(
+        new ComponentInstance(
+          typeof el === "string" ? document.getElementById(el)! : el,
+          setup,
+          this
+        )
+      );
+      return this.#COMPONENTS_INSTANCE[i - 1];
+    } else {
+      console.warn("Not setup foudn for component ", { __component, el });
+    }
+  }
+
   mount() {
     window.Dashyboard.__components_queue.forEach((component) => {
-      const setup = this.#COMPONENTS.get(component.__component);
-      if (setup) {
-        this.#COMPONENTS_INSTANCE.push(
-          new ComponentInstance(
-            document.getElementById(component.id)!,
-            setup,
-            this
-          )
-        );
-      } else {
-        console.warn("Not setup foudn for component ", component);
-      }
+      this.initComponent(component.__component, component.el);
     });
     return this;
   }
 
-  registerComponent(name: string, setup: SetupFunction<any>) {
+  registerComponent(name: string, setup: SetupFunction) {
     this.#COMPONENTS.set(name, setup);
     return this;
   }

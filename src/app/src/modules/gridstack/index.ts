@@ -2,7 +2,9 @@ import { App, createEvent } from "../../../lib/index";
 
 export default function GridStackPlugin(app: App) {
   window.addEventListener("load", () => {
-    const grid = window.GridStack.init();
+    const grid = window.GridStack.init({
+      float: true,
+    });
     app.provide("Grid", grid);
 
     grid.on("change", function (event, els) {

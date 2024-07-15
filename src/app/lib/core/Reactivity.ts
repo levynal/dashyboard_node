@@ -65,7 +65,7 @@ export class Ref<T = unknown> {
   constructor(componentInstance: ComponentInstance, rawRaw: T) {
     this.#componentInstance = componentInstance;
     this.#_rawValue = rawRaw;
-    if (rawRaw instanceof Object) {
+    if (rawRaw instanceof Object && !(rawRaw instanceof Element)) {
       this.#_value = new RefProxyObject<{ [k: string]: unknown }>(
         rawRaw as { [k: string]: unknown },
         this.#onGetValue.bind(this),
@@ -82,7 +82,7 @@ export class Ref<T = unknown> {
   }
 
   set value(newValue: T) {
-    if (newValue instanceof Object) {
+    if (newValue instanceof Object && !(newValue instanceof Element)) {
       this.#_value = new RefProxyObject(
         newValue as { [k: string]: unknown },
         this.#onGetValue.bind(this),

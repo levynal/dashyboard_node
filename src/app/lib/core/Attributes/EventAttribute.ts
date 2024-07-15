@@ -1,13 +1,14 @@
 import { ComponentInstance } from "../../Component";
-import Attribute from "./Attribute";
+import Attribute, { evalInComponentContext, Modifiers } from "./Attribute";
 
 export class EventAttribute extends Attribute {
   constructor(
     name: string,
     public htmlEventName: string,
-    public beforeCallback: (event: Event, modifier: string) => void = () => {}
+    // public beforeCallback: (event: Event, modifier: string) => void = () => {},
+    modifiers?: Modifiers
   ) {
-    super(name);
+    super(name, modifiers);
   }
 
   register(
@@ -16,17 +17,16 @@ export class EventAttribute extends Attribute {
     atributeName: string,
     modifier: string
   ): void {
-    console.log("event register");
+    this.modifiers = this.getModifiers(componentInstance);
+
     element.addEventListener(this.htmlEventName, (event) => {
+      if (modifier && this.modifiers && modifier in this.modifiers) {
+        this.modifiers[modifier](event);
+      }
       const eventScript = element.getAttribute(atributeName)!;
 
       try {
-        this.beforeCallback(event, modifier);
-
-        const func = new Function(
-          "e",
-          "with(document) {" + "with(this) {" + eventScript + "}" + "}"
-        );
+        const func = evalInComponentContext(eventScript);
 
         func.apply(componentInstance.__setupData);
       } catch (error) {

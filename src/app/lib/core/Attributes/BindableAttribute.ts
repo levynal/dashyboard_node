@@ -1,5 +1,5 @@
 import { ComponentInstance } from "../../Component";
-import Attribute, { Modifiers } from "./Attribute";
+import Attribute, { evalInComponentContext, Modifiers } from "./Attribute";
 
 export class BindableAttribute extends Attribute {
   constructor(
@@ -17,13 +17,8 @@ export class BindableAttribute extends Attribute {
     modifier?: string
   ): void {
     this.modifiers = this.getModifiers(componentInstance);
-    const getValue = new Function(
-      "e",
-      "with(document) {" +
-        "with(this) { return " +
-        `${element.getAttribute(attributeName)!};` +
-        "}" +
-        "}"
+    const getValue = evalInComponentContext(
+      element.getAttribute(attributeName)!
     ).bind(componentInstance.__setupData);
 
     componentInstance.watch(getValue, () => {

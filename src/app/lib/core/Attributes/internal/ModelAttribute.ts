@@ -1,7 +1,7 @@
 import { ComponentInstance } from "../../../Component";
 import getStringValue from "../../../utils/getStringValue";
 import { debounce } from "../../../utils/debounce";
-import Attribute from "../Attribute";
+import Attribute, { evalInComponentContext } from "../Attribute";
 
 export class ModelAttribute extends Attribute {
   constructor() {
@@ -22,15 +22,10 @@ export class ModelAttribute extends Attribute {
           modifier && that.modifiers && modifier in that.modifiers
             ? that.modifiers[modifier](this.value)
             : this.value;
-        const setValue = new Function(
-          "e",
-          "with(document) {" +
-            "with(this) { return " +
-            `${modelEl.getAttribute(attributeName)!} = ${
-              typeof value === "number" ? value : `'${value}'`
-            };` +
-            "}" +
-            "}"
+        const setValue = evalInComponentContext(
+          `${modelEl.getAttribute(attributeName)!} = ${
+            typeof value === "number" ? value : `'${value}'`
+          }`
         );
         modelEl.setAttribute("r-no-update", "true");
         setValue.call(componentInstance.__setupData);

@@ -3,8 +3,8 @@ import { ComponentInstance } from "../../../Component";
 import Attribute from "../Attribute";
 
 export class RefAttribute extends Attribute {
-  constructor() {
-    super("ref");
+  constructor(name: string = "ref") {
+    super(name);
   }
 
   register(

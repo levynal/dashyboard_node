@@ -64,6 +64,14 @@ function draftboard() {
                             }
                         },
                     },
+                    getOtherThing: {
+                        title: "Get Data",
+                        handler: function (module) {
+                            if (module.data.canEdit) {
+                                module.data.text = "new value";
+                            }
+                        },
+                    },
                 },
                 init: function (module) {
                     console.log("INIT", "widtget 1");

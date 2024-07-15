@@ -18,12 +18,9 @@ export default abstract class Attribute<E extends Element = Element> {
     const modifiers = this.getModifiers(componentInstance);
 
     let attributeName = `${AppConfig.attribute.prefix}${this.name}`;
-    console.log({ attributeName, ins: componentInstance, modifiers });
     componentInstance.componentEl
       .querySelectorAll<E>(`[${attributeName}]`)
       .forEach((domElement) => {
-        console.log(domElement);
-
         this.register(componentInstance, domElement, attributeName);
       });
 
@@ -50,4 +47,15 @@ export default abstract class Attribute<E extends Element = Element> {
       ...componentInstance.__app__.MODFIERS[this.name],
     };
   }
+}
+
+export function evalInComponentContext(script: string) {
+  return new Function(
+    "e",
+    ` with(document) {
+        with(this) {
+          return ${script};
+        }
+      }`
+  );
 }

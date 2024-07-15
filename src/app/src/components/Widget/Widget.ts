@@ -1,5 +1,9 @@
 import Component from "../../../lib/Component";
-import { updateWidgetsPositionAndSize } from "../../scripts/service/widget.service";
+import useLoading from "../../macros/useLoading";
+import {
+  updateWidget,
+  updateWidgetsPositionAndSize,
+} from "../../scripts/service/widget.service";
 
 type Widget = {
   id: string;
@@ -8,16 +12,25 @@ type Widget = {
   position: { x: number; y: number; w: number; h: number };
 };
 
-export default Component<Widget>(function () {
-  const widget = this.ref(this.data);
+//TODO: UTILSER ca pour le binding + comme ça on peut utiliser: pour les modifiers
+// var nodesSnapshot = document.evaluate('//*/attribute::*[starts-with(name(), "r-text")]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+// var attr;
+// for (var i=0; i < nodesSnapshot.snapshotLength; i++ ) {
+//    attr = nodesSnapshot.snapshotItem(i);
+//    console.log(attr, attr.ownerElement)
+// };
+//Array.from({ length: nodesSnapshot.snapshotLength }, (_, index) => nodesSnapshot.snapshotItem(index));
+export default Component(function () {
+  const widget = this.ref(this.data as Widget);
   const input = this.ref(0);
 
   const maRef = this.ref(undefined);
-
+  const dialogRef = this.ref<HTMLDialogElement | undefined>(undefined);
+  const widgetTitle = this.ref((this.data as Widget).title);
   this.watch(
-    () => [input.value],
+    () => [dialogRef.value],
     (newValue, oldValue) => {
-      console.log("WATCH[input]", { newValue, oldValue });
+      console.log("WATCH[dialogRef]", { newValue, oldValue });
     }
   );
 
@@ -42,17 +55,64 @@ export default Component<Widget>(function () {
     (data) => data.id === widget.value.id
   );
 
-  function toto2(data2: unknown) {
-    console.log({ data2, input });
-    console.log({ event });
+  const [editWidgetLoading, editWidget] = useLoading.bind(this)(async () => {
+    const resp = await updateWidget({
+      id: widget.value.id,
+      title: widget.value.title,
+    });
+    if (resp.ok) {
+      widget.value = await resp.json();
+      window
+        .Toastify({
+          text: "Succefull changed widget data",
+          className: "info",
+          position: "center",
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          },
+        })
+        .showToast();
+    } else {
+      widgetTitle.value = widget.value.title;
+      window
+        .Toastify({
+          text: "Error while changing widget data",
+          className: "error",
+          position: "center",
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+          },
+        })
+        .showToast();
+    }
+  });
+
+  function openEditWidget() {
+    if (dialogRef.value) {
+      console.log(dialogRef.value);
+      dialogRef.value.showModal();
+    }
   }
 
+  function onActionClick(action: string) {
+    console.log("onActionClick", action);
+  }
+
+  function onModalClose() {
+    console.log("modal close");
+  }
   return {
+    onModalClose,
+    onActionClick,
+    editWidgetLoading,
+    editWidget,
+    dialogRef,
     computedVar,
     maRef,
     maVar,
     widget,
     input,
-    toto2,
+    openEditWidget,
+    widgetTitle,
   };
 });

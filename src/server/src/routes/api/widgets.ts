@@ -4,6 +4,8 @@ import { WidgetPositionSize } from "../../types/widget";
 
 export type UpdatePositionSizeBody = WidgetPositionSize & { id: string };
 
+export type UpdateWidgetBody = { id: string; title: string };
+
 export default function (
   fastify: FastifyInstance,
   opts: {},
@@ -33,7 +35,10 @@ export default function (
       Body: UpdatePositionSizeBody[];
     }>("/updatePositionAndSize", (req) =>
       WidgetController.updatePositionAndSize(req.body)
-    );
+    )
+    .patch<{
+      Body: UpdateWidgetBody;
+    }>("/update", (req) => WidgetController.updateWidget(req.body));
 
   done();
 }

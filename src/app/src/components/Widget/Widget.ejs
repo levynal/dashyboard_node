@@ -8,20 +8,23 @@
     id="<%= widget.id %>"
 >
     <div class="grid-stack-item-content">
-        <p r-text="widget.value.id"><%= widget.id %></p>
-        <p r-text="new Date() + widget.value.title"><%= widget.title %></p>
-         <p r-text="widget.value"></p>
-         <p r-text="computedVar.value"></p>
-        <p r-text="'value: [' + input.value + ']'"></p>
-        <p r-text="maVar" r-ref="maRef"></p>
-        <input type="text" r-model="widget.value.title" ></input>
+        <button r-click="openEditWidget('<%= widget.id %>')">Edit widget</button>
 
-        <form r-submit="toto">
-             <input type="text" r-model-number="input.value"></input>
+        <p r-text="widgetTitle.value"><%= widget.title %></p>
+
+        <% widget.actions.forEach(function(action) { %>
+            <%- include('../../elements/Rbutton', {text:action, onClick:`onActionClick('${action}')`}); %>
+        <% }); %> 
+    </div>
+    <dialog r-dialog="dialogRef" r-close="onModalClose()">
+        <h2 r-text="'Edit widget : ' + widget.value.title"></h2>
+
+         <form r-submit-prevent="editWidget()">
+             <input type="text" r-model="widget.value.title" ></input>
              <button type="submit">Send</button>
         </form>
-        <button r-click="toto2('<%= widget.id %>')">call toto</button>
-    </div>
+        <p r-text="editWidgetLoading.value"></p>
+    </dialog>
     <script>
         window.R.add('Widget', '<%= widget.id %>')
     </script>

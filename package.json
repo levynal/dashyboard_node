@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "watch": {
-    "start": {
+    "buildAndStart": {
       "patterns": [
         "src"
       ],
@@ -17,6 +17,7 @@
     }
   },
   "scripts": {
+    "buildAndStart": "npm run build && npm run start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build tsconfig.json && fix-esm-import-path dist/app",
     "start": "node ./dist/server/index.js",
@@ -43,11 +44,13 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@types/toastify-js": "^1.12.3",
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.5.10",
     "copyfiles": "^2.4.1",
     "cpy-cli": "^5.0.0",
     "fix-esm-import-path": "^1.10.0",
+    "toastify-js": "^1.12.0",
     "tsc-alias": "1.8.10"
   }
 }

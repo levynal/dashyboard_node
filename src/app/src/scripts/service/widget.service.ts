@@ -15,3 +15,13 @@ export function updateWidgetsPositionAndSize(
     },
   });
 }
+
+export function updateWidget(widgetData: { id: string; title: string }) {
+  return fetch("/api/widget/update", {
+    method: "PATCH",
+    body: JSON.stringify(widgetData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}

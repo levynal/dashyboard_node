@@ -1,7 +1,10 @@
 import { SocketManager } from "../core/SocketManager";
 import { ModuleManager } from "../core/ModuleManager";
 import { WidgetManager } from "../core/WidgetManager";
-import { UpdatePositionSizeBody } from "../routes/api/widgets";
+import {
+  UpdatePositionSizeBody,
+  UpdateWidgetBody,
+} from "../routes/api/widgets";
 
 export namespace WidgetController {
   const socketManager = SocketManager;
@@ -25,7 +28,6 @@ export namespace WidgetController {
   export async function updatePositionAndSize(
     widgetsData: UpdatePositionSizeBody[]
   ) {
-    console.log({ widgetsData });
     return Promise.all(
       widgetsData.map((widgetData) => {
         const { id, ...positionSize } = widgetData;
@@ -34,5 +36,10 @@ export namespace WidgetController {
       })
     );
     //on va chercher chque widget avec son id et on
+  }
+
+  export async function updateWidget({ id, ...widgetData }: UpdateWidgetBody) {
+    WidgetManager.updateWidget(id, widgetData);
+    return WidgetManager.widgets[id];
   }
 }
