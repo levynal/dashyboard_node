@@ -19,7 +19,7 @@
     <dialog r-dialog="dialogRef" r-close="onModalClose()">
         <h2 r-text="'Edit widget : ' + widget.value.title"></h2>
 
-         <form r-submit-prevent="editWidget()">
+         <form r-submit:prevent="editWidget()">
              <input type="text" r-model="widget.value.title" ></input>
              <button type="submit">Send</button>
         </form>
