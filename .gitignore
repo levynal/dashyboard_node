@@ -177,3 +177,5 @@ dist
 
 .modules/**
 !.modules/
+
+db

@@ -11,7 +11,7 @@ export namespace WidgetManager {
 
   export let widgetsConfigurations: ReturnType<typeof widgetConfiguration>[] =
     [];
-  let widgetDB = new JsonDB(new Config("widgets", true, false, "/"));
+  let widgetDB = new JsonDB(new Config("db/widgets", true, false, "/"));
   export let widgets: { [id: string]: Widget } = {};
 
   export function getWidgetConfigurationByName(name: string) {
